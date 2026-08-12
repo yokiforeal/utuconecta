@@ -1,13 +1,13 @@
-*{
-    font-family: "Google Sans", sans-serif;
+/* --- DEFINIMOS PARAMETROS DE LA PAGINA EN GENERAL --- */
+* {
+    font-family: "Google Sans", sans-serif; /* --- FUENTE DE LA APP --- */
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    font-variation-settings:
-    "GRAD" 0;
-
+    font-variation-settings: "GRAD" 0;
 }
 
+/* --- DEFINIMOS PARAMETRO DEL BODY (MARGIN + PADDING) PARA COMODIDAD DE DISEÑO --- */
 body {
     margin: 0;
     padding: 0;
@@ -15,7 +15,8 @@ body {
     background-color: rgb(200, 209, 216);
 }
 
-.all-app{
+/* --- "all_app" ES UN CONTENEDOR QUE COMO SU NOMBRE INDICA, CONTIENE LA APP EN EL 100% DEL VIEWPORT --- */
+.all_app {
     display: flex;
     flex-direction: column;
     background-color: rgb(200, 209, 216);
@@ -23,13 +24,15 @@ body {
     width: 100vw;    
 }
 
-.rectangulo-azul{
+/* --- DEFINE EL ESTILO DE LAS DOS FRANJAS AZULES EN LA PÁGINA --- */
+.rectangulo_azul {
     background-color: #2e4957;
     height: 40px;
     width: 100%;
 }
 
-.usercenter{
+/* --- DEFINE LA BARRA SUPERIOR QUE CONTIENE EL "BUSCADOR" "NOTIFICACIONES" "PERFIL" --- */
+.usercenter {
     display: flex;
     background-color: #2e4957;
     height: 10%;    
@@ -43,33 +46,103 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
-.post{
+/* --- ESTILOS DEL MENÚ DESPLEGABLE --- */
+.perfil_desplegable {
+    position: relative;
+    display: inline-block;
+    margin-right: 25px;
+}
+
+#perfil_boton {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#perfil_boton:hover { /* --- ANIMACIÓN AL PASAR EL MOUSE POR EL ICONO --- */
+    transform: scale(1.1);
+}
+
+.menu_desplegable {
+    display: none; /* --- OCULTA EL MENÚ POR DEFECTO --- */
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background-color: #ffffff;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+/* CLASE DE JAVASCRIPT PARA ACTIVAR/DESACTIVAR EL MENÚ */
+.menu_desplegable.mostrar {
     display: flex;
+}
+
+.menu_desplegable_item {
+    color: #2e4957;
+    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.menu_desplegable_item:hover {
+    background-color: #f0f4f8; /* --- AL PASAR EL MOUSE POR ENCIMA DE CADA ITEM CAMBIA EL COLOR DEL FONDO --- */
+}
+
+/* --- ESTILO PARA CADA POST --- */
+.post {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     background-color: #2e4957;
-    height: 300px;    
+    height: 300px;           
     width: 60%;
     border-radius: 15px;
     margin-top: 5px;
     margin-bottom: 5px;
-    flex-shrink: 0;
+    flex-shrink: 0; /* ---  ES PARA QUE NO SE DEFORMEN LOS POSTS --- */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
+/* --- ESTANDARIZACIÓN DE LAS IMÁGENES --- */
 .post_imagen {
-    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1 / 1; /* --- CONVIERTE EN CUADRADO TODAS LAS IMAGENES SIN ESTIRARLAS --- */
     object-fit: cover; 
-    border-radius: 30px;
-    height: 90%;
-    margin-top: 3vh;
-    margin-left: 2vh;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
-.post_imagen_div{
-    height: 90%;
-    width: 50%;
+/* --- CONTENEDOR PARA POSICIONAR LA IMÁGEN --- */
+.post_imagen_div {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* CONTENEDOR DE LOS TEXTOS A LA DERECHA EN CADA POST */
+.post_texto {
+    display: flex;
+    flex-direction: column;   
+    width: 70%;              
+    height: 100%;
+    padding: 25px 25px 25px 10px;
+    color: #ffffff;
+    box-sizing: border-box;
+    overflow: hidden;        
+}
 
 .contenido_medio {
     display: flex;
@@ -79,23 +152,28 @@ body {
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-
 }
 
-.fa-user{
-    margin-right: 25px;
-}
-
-.titulo_post{
-    margin-top: 0;
-    margin-left: 40vh;
+.titulo_post {
+    margin: 0 0 10px 0;
     color: #ffffff;
-    text-align: left;
-    transform: translateY(-250px);
-    margin-left: 280px ;    
+    font-size: 1.5rem;
+}
+/* ESTILO DE EL PÁRRAFO DE LLAMADO EN CADA POST */
+.parrafo_post {
+    margin: 0;
+    color: #ffffff;
+    text-align: justify;
+    line-height: 1.4;
+    word-break: break-word;
+    display: -webkit-box; /* --- NO TENGO CLARO QUE ES ESTO PERO ES PARA CONTAR LOS PARRAFOS --- */
+    -webkit-line-clamp: 6; /* --- RESTRINGE A 6 PÁRRAFOS  --- */
+    -webkit-box-orient: vertical; /* --- HACE QUE LOS PÁRRAFOS SE CUENTEN VERTICALMENTE --- */
+    overflow: hidden;
 }
 
-Input[type="search"]{
+/* --- ESTILO DE LA BARRA DE BÚSQUEDA --- */
+input[type="search"] {
     width: 80%;
     height: 25px;
     border: 1px solid;
@@ -104,13 +182,19 @@ Input[type="search"]{
     font-size: 18px;
     color: rgb(255, 255, 255);
     cursor: pointer;
-    outline:#ffffff;
+    outline: #ffffff;
     outline: 5px;
     margin: 1vh;
     margin-right: 6vh;
 }
 
-::placeholder{
+/* --- ESTILOS AL PLACEHOLDER (EL TECTO DENTRO DE LOS INPUTS) --- */
+::placeholder {
     font-size: medium;
     opacity: 80;
+}
+
+/* --- MARGEN PARA ALEJAR LA CAMPANA DEL ICONO DE USUARIO --- */
+#icono_campana{
+    margin-right: 15px;
 }
