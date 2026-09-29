@@ -20,15 +20,8 @@ body {
     display: flex;
     flex-direction: column;
     background-color: rgb(200, 209, 216);
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;    
-}
-
-/* --- DEFINE EL ESTILO DE LAS DOS FRANJAS AZULES EN LA PÁGINA --- */
-.rectangulo_azul {
-    background-color: #2e4957;
-    height: 40px;
-    width: 100%;
 }
 
 /* --- DEFINE LA BARRA SUPERIOR QUE CONTIENE EL "BUSCADOR" "NOTIFICACIONES" "PERFIL" --- */

@@ -1,13 +1,20 @@
+<?php
+session_start();
+
+// Si no existe la sesion manda al login
+if (!isset($_SESSION['usuario'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Página Principal - ANEP UTU</title>
-    <!-- SE CONECA EL ARCHIVO DE ESTILOS PARA EL HTML --->
+    <!-- Estilos específicos de la página principal -->
     <link rel="stylesheet" href="static/styles/style_index.css">
-    <!-- CONECTA CON UNA PÁGINA PARA USAR ICONOS VECTORIALES --->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- CONECTA CON LA PAGINA GOOGLE FONTS PARA UTILIZAR LA FUENTE EN TODA LA PÁGINA --->
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
     </style>
@@ -15,8 +22,10 @@
 
 <body>
     <!-- CONTENEDOR DE TODA LA APLICACIÓN WEB -->
-    <div class="all_app">   
-        <div class="rectangulo_azul"></div>
+    <div class="all_app"> 
+        
+        <?php include 'header.php'; ?>
+
         <div class="contenido_medio">    
             <div class="usercenter">
                 <input type="search" placeholder="Buscar...">
@@ -26,16 +35,16 @@
                     <i class="fa-regular fa-user fa-lg" id="perfil_boton" style="color: #ffffff;"></i>
 
                     <div class="menu_desplegable" id="menu_desplegable_perfil">
-                        
                         <a href="#" class="menu_desplegable_item">
-                            <i class="fa-regular fa-id-card"></i> Perfil
+                            <i class="fa-regular fa-id-card"></i> Perfil (<?php echo htmlspecialchars($_SESSION['usuario']); ?>)
                         </a>
 
                         <a href="#" class="menu_desplegable_item">
                             <i class="fa-solid fa-gear"></i> Configuración
                         </a>
 
-                        <a href="#" class="menu_desplegable_item">
+                        <!-- Redirige a logout.php para destruir la sesión correctamente -->
+                        <a href="logout.php" class="menu_desplegable_item">
                             <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                         </a>
                     </div>
@@ -49,21 +58,20 @@
                 
                 <div class="post_texto">
                     <h1 class="titulo_post"> Título </h1>
-                    <p class="parrafo_post">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.</p>
+                    <p class="parrafo_post">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.</p>
                 </div>
             </div>
-            <div class="post"></div>
-
-            <div class="post"></div>
-
-            <div class="post"></div>
-
-            <div class="post"></div>
-
             
-
-            
+            <div class="post"></div>
+            <div class="post"></div>
+            <div class="post"></div>
+            <div class="post"></div>
         </div>
-    </div>
+
+        <?php include 'footer.php'; ?>
+
+    </div> 
+    
     <script src="static/javascript/java_index.js"></script>
 </body>
+</html>
