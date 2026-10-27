@@ -150,8 +150,14 @@ body {
 .titulo_post {
     margin: 0 0 10px 0;
     color: #ffffff;
-    font-size: 1.5rem;
+    font-size: 2.0rem;
+    
 }
+
+.fa-clipboard {
+    margin-left: 15px;
+}
+
 /* ESTILO DE EL PÁRRAFO DE LLAMADO EN CADA POST */
 .parrafo_post {
     margin: 0;
@@ -181,7 +187,7 @@ input[type="search"] {
     margin-right: 6vh;
 }
 
-/* --- ESTILOS AL PLACEHOLDER (EL TECTO DENTRO DE LOS INPUTS) --- */
+/* --- ESTILOS AL PLACEHOLDER (EL TEXTO DENTRO DE LOS INPUTS) --- */
 ::placeholder {
     font-size: medium;
     opacity: 80;
@@ -190,4 +196,72 @@ input[type="search"] {
 /* --- MARGEN PARA ALEJAR LA CAMPANA DEL ICONO DE USUARIO --- */
 #icono_campana{
     margin-right: 15px;
+}
+
+/* --- BOTONES DE POSTULAR --- */
+.btn-postularse, .btn-cancelar {
+    padding: 5px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.67rem;
+    font-weight: bold;
+    cursor: pointer; 
+    transition: background 0.3s ease;
+}
+
+.btn-postularse {
+    background-color: #2e4957;
+    color: white;
+    border-color: white;
+    border: 2px solid;
+    border-radius: 20px;
+}
+
+.btn-postularse:hover {
+    background-color: rgb(76, 109, 135);
+}
+
+.btn-cancelar {
+    display: none;
+    background-color: #d9534f;
+    color: white;
+    margin-left: 10px;
+}
+
+.btn-cancelar:hover {
+    background-color: #c9302c;
+}
+
+.botones_postularse {
+    display: flex;
+    flex-direction: row; /* para que si hay varios botones estén en fila */
+    margin-top: 10px;
+    align-self: flex-start; /* para que este a la izquierda */
+}
+
+/* --- ESTILOS NUEVOS DEL LLAMADO (BORRAR EN CASO DE PROBLEMAS) --- */
+.detalles_llamado {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.detalles_llamado span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.detalles_llamado i {
+    color: #ffffff;
+}
+
+/* Ajuste al contenedor interno para espacio y distribucion uniforme */
+.post_info_interna {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }

@@ -1,11 +1,6 @@
-*{
+* {
     font-family: "Google Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weigth: <400>;
-    font-style: normal;
-    font-variation-settings:
-    "GRAD" 0;
-
+    box-sizing: border-box;
 }
 
 body {
@@ -14,129 +9,126 @@ body {
     overflow-x: hidden;
 }
 
-.all-app{
+.all-app {
     display: flex;
     flex-direction: column;
-    background-color: aliceblue;
     min-height: 100vh;
-    width: 100vw;    
+    width: 100%;
 }
 
+/* ZONA CENTRAL */
 .contenido_medio {
     display: flex;
     flex: 1;
     width: 100%;
-    overflow: hidden; 
+    min-height: 0;
 }
 
+/* MITAD IZQUIERDA */
 .parte_izquierda {
-    flex: 1; 
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* MITAD DERECHA */
+.parte_derecha {
+    width: 50%;
+    display: flex;
+    overflow: hidden;
+}
+
+/* IMAGEN */
+#imagen_login {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* LOGIN */
+.formulario-login {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box; 
-    z-index: 2;
-}
-
-.formulario-login{
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;   
-    min-height: 50vh;
-    overflow: hidden;
     transform: translateY(-40px);
 }
 
-.recordar{
-    padding-top: 5px;
-    padding-bottom: 15px;
-}
-
-.registrarse{
-    padding-top: 5px;
-}
-
-Input[type="text"]{
+input[type="text"],
+input[type="password"] {
     width: 90%;
-    height: 25px;
+    height: 40px;
     border: 1px solid;
     background: none;
     border-radius: 5px;
     font-size: 18px;
     color: black;
     cursor: pointer;
-    outline:#2e4957;
-    outline: 5px;
-    margin: 1vh;
-    
-}
-
-Input[type="password"]{
-    width: 90%;
-    height: 25px;
-    border: 1px solid;
-    background: none;
-    border-radius: 5px;
-    font-size: 18px;
-    color: black;
-    cursor: pointer;
-    outline:#2e4957;
-    outline: 5px;
+    outline: none;
     margin: 1vh;
 }
 
-::placeholder{
+::placeholder {
     font-size: medium;
     text-align: center;
-    opacity: 80;
+    opacity: 0.8;
 }
 
-Input[type="submit"]{
+input[type="submit"] {
     width: 50%;
     height: 50px;
     border: 1px solid;
-    background:#2e4957;
+    background: #2e4957;
     border-radius: 25px;
     font-size: 18px;
     color: white;
     cursor: pointer;
-    outline: none;
-    
 }
 
-.parte_derecha {
-    display: flex;
-    justify-content: flex-end; 
-    width: 65%;
-    height: 100%;
-    overflow: hidden;
+.recordar {
+    padding-top: 5px;
+    padding-bottom: 15px;
 }
 
-
-#imagen_login {
-    height: 100%;
-    width: 100%;
-    object-fit: cover; 
+.registrarse {
+    padding-top: 5px;
 }
 
-#logoutu{
-    height: 35px;
-    width: auto;
-    padding-left: 90px;
-    padding-top: 50px;
-    padding-right: 90px;
+#logoutu {
+    display: block;
+    width: 250px;
+    height: auto;
+    margin: 0 auto 20px auto;
+    transform: translateY(-50px);
 }
 
-/* --- REGLAS RESPONSIVE (PAL CELU) --- */
+/* CELULAR */
 @media (max-width: 768px) {
+
+    .contenido_medio {
+        flex-direction: column;
+    }
+
+    .parte_izquierda {
+        width: 100%;
+        min-height: 100%;
+    }
+
     .parte_derecha {
         display: none;
     }
 
-    .parte_izquierda {
-        flex: 1 1 100%;
-        width: 100%;
+    .formulario-login {
+        transform: none;
     }
+
+    #logoutu {
+        width: 250px;
+        height: auto;
+        margin-top: 200px;
+    }
+
 }

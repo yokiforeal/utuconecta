@@ -1,19 +1,43 @@
 <?php
 session_start();
+require_once 'conexion.php'; // función de la conexión
+
 $mensaje_error = "";
 
-// procesamiento de datos al enviar el formulario
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $username = trim($_POST['username'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
-    // harcodeada historica hasta tener la base de datos
-    if ($username === "user" && $password === "user") {
-        $_SESSION['usuario'] = $username;
-        header("Location: index.php");
-        exit();
+    if (!empty($username) && !empty($password)) {
+        
+        // obtener conexión desde la función
+        $conn = obtenerConexion();
+
+        $stmt = $conn->prepare("SELECT CI, Nombre, Apellido, Password FROM usuarios WHERE CI = ?"); //sentencia sql para revisar los datos
+        $stmt->bind_param("i", $username); // cambia el ? por la cedula, es por seguridad "i" hace que si o si se comporte como un entero para evitar ataques maliciosos xd
+        $stmt->execute(); // ejecuta la sentencia preparada antes
+        $resultado = $stmt->get_result(); // guarda en la variable los datos 
+
+        if ($usuario = $resultado->fetch_assoc()) { // vuelve los datos "utilizables"
+            if ($password === $usuario['Password']) { // verifica la password comparandola a la de la base de datos 
+                // cada caja de sesion toma el valor del formulario
+                $_SESSION['usuario'] = $usuario['CI']; 
+                $_SESSION['nombre'] = $usuario['Nombre'];
+                $_SESSION['apellido'] = $usuario['Apellido']; 
+
+                header("Location: index.php");
+                exit();
+            } else {
+                $mensaje_error = "Usuario o contraseña incorrectos";
+            }
+        } else {
+            $mensaje_error = "Usuario o contraseña incorrectos";
+        }
+
+        $stmt->close();
+        $conn->close();
     } else {
-        $mensaje_error = "Usuario o contraseña incorrectos";
+        $mensaje_error = "Por favor, completa todos los campos.";
     }
 }
 ?>
@@ -40,14 +64,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <img id="logoutu" src="static/img/logoutu.png" alt="Logo de Escuela Técnica">
                      
                     <?php if (!empty($mensaje_error)): ?>
-                        <p style="color: red; text-align: center; margin-bottom: 10px;">
+                        <p style="color: red; text-align: center; margin-bottom: 40px; padding-top: 0">
                             <?php echo htmlspecialchars($mensaje_error); ?>
                         </p>
                     <?php endif; ?>
 
                     <form method="post" action="login.php" class="formulario-login">
                         <div class="username">
-                            <input type="text" name="username" required placeholder="Nombre de Usuario">
+                            <input type="text" name="username" required placeholder="Cédula">
                         </div>
 
                         <div class="password">
@@ -59,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <input type="submit" value="Iniciar">
 
                         <div class="registrarse">
-                            <a href="register.html">Registrarse</a>    
+                            <a href="register.php">Registrarse</a>    
                         </div>
                     </form>
                 </div>
