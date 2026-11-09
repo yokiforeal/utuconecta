@@ -1,0 +1,277 @@
+/* --- DEFINIMOS PARAMETROS DE LA PAGINA EN GENERAL --- */
+* {
+    font-family: "Google Sans", sans-serif; /* --- FUENTE DE LA APP --- */
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "GRAD" 0;
+}
+
+/* --- DEFINIMOS PARAMETRO DEL BODY (MARGIN + PADDING) PARA COMODIDAD DE DISEÑO --- */
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: rgb(200, 209, 216);
+}
+
+/* --- "all_app" ES UN CONTENEDOR QUE COMO SU NOMBRE INDICA, CONTIENE LA APP EN EL 100% DEL VIEWPORT --- */
+.all_app {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(200, 209, 216);
+    min-height: 100vh;
+    width: 100vw;    
+}
+
+/* --- DEFINE LA BARRA SUPERIOR QUE CONTIENE EL "BUSCADOR" "NOTIFICACIONES" "PERFIL" --- */
+.usercenter {
+    display: flex;
+    background-color: #2e4957;
+    height: 10%;    
+    width: 60%;
+    border-radius: 15px;
+    margin-top: 15px;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+    align-items: center;
+    justify-content: end;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+
+/* --- ESTILOS DEL MENÚ DESPLEGABLE --- */
+.perfil_desplegable {
+    position: relative;
+    display: inline-block;
+    margin-right: 25px;
+}
+
+#perfil_boton {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#perfil_boton:hover { /* --- ANIMACIÓN AL PASAR EL MOUSE POR EL ICONO --- */
+    transform: scale(1.1);
+}
+
+.menu_desplegable {
+    display: none; /* --- OCULTA EL MENÚ POR DEFECTO --- */
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background-color: #ffffff;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+/* CLASE DE JAVASCRIPT PARA ACTIVAR/DESACTIVAR EL MENÚ */
+.menu_desplegable.mostrar {
+    display: flex;
+}
+
+.menu_desplegable_item {
+    color: #2e4957;
+    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.menu_desplegable_item:hover {
+    background-color: #f0f4f8; /* --- AL PASAR EL MOUSE POR ENCIMA DE CADA ITEM CAMBIA EL COLOR DEL FONDO --- */
+}
+
+/* --- ESTILO DE LA BARRA DE BÚSQUEDA --- */
+input[type="search"] {
+    width: 80%;
+    height: 25px;
+    border: 1px solid;
+    background: white;
+    border-radius: 5px;
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    outline: #ffffff;
+    outline: 5px;
+    margin: 1vh;
+    margin-right: 6vh;
+}
+
+/* --- ESTILOS AL PLACEHOLDER (EL TEXTO DENTRO DE LOS INPUTS) --- */
+::placeholder {
+    font-size: medium;
+    opacity: 80;
+}
+
+/* --- MARGEN PARA ALEJAR LA CAMPANA DEL ICONO DE USUARIO --- */
+#icono_campana{
+    margin-right: 15px;
+}
+
+/* --- TARJETAS DE LLAMADOS CENTRADAS --- */
+.admin-form-card {
+    background-color: #2e4957;
+    width: 60%;
+    border-radius: 15px;
+    padding: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    color: white;
+}
+
+/* --- BOTÓN GUARDAR --- */
+.btn_guardar {
+    background-color: #4f88d9;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn_guardar:hover {
+    background-color: #416ba6;
+    transform: scale(1.02);
+}
+/* --- BOTÓN ELIMINAR --- */
+.btn_eliminar {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn_eliminar:hover {
+    background-color: #c9302c;
+    transform: scale(1.02);
+}
+
+/* --- SECCIÓN DE POSTULANTES --- */
+.seccion-postulantes {
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.seccion-postulantes ul {
+    padding-left: 20px;
+    margin: 10px 0 0 0;
+}
+
+.seccion-postulantes li {
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+.cv-link {
+    color: #ffffff;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.cv-link:hover {
+    color: #e0e0e0;
+}
+
+/* --- CORRECCIÓN DE CAMPOS DENTRO DE LAS TARJETAS DE MIS LLAMADOS --- */
+.admin-form-card .form-crear-llamado {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-form-card .form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.admin-form-card .form-grupo label {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.admin-form-card .form-grupo input[type="text"],
+.admin-form-card .form-grupo input[type="number"],
+.admin-form-card .form-grupo textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #2e4957;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Google Sans", sans-serif;
+}
+
+.admin-form-card .form-row-triple {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.admin-form-card .form-row-triple .form-grupo {
+    flex: 1;
+}
+
+/* --- LAYOUT DE TARJETA CON IMAGEN --- */
+.tarjeta_cuerpo {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.tarjeta_cuerpo .post_imagen_div {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.tarjeta_cuerpo .post_imagen {
+    width: 100%;
+    max-width: 180px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.tarjeta_cuerpo .form-crear-llamado {
+    width: 70%;
+}
+
+.admin-form-card input[type="file"] {
+    color: white;
+    font-size: 0.85rem;
+}
