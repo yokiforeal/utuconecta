@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../Logica/UsuarioLogica.php';
+require_once __DIR__ . '/../../conexion.php';
 
 class UsuarioPresentacion {
     private $logica;

@@ -1,52 +1,13 @@
 <?php
-session_start();
-require_once 'app/Logica/llamadoLogica.php';
+require_once 'app/Presentacion/LlamadoPresentacion.php';
 
-if (!isset($_SESSION['usuario']) || $_SESSION['tipo_usuario'] !== 'empresa') {
-    header("Location: login.php");
-    exit();
-}
+$presentacion = new LlamadoPresentacion();
+$datosVista = $presentacion->gestionarPagina();
 
-$llamadoLogica = new LlamadoLogica();
-$ciEmpresa = $_SESSION['usuario'];
-
-$misLlamados = $llamadoLogica->obtenerPorEmpresaCI($ciEmpresa);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['accion'])) {
-        if ($_POST['accion'] === 'eliminar') {
-            $idLlamado = intval($_POST['id_llamado']);
-            $llamadoLogica->borrarLlamado($idLlamado);
-            header("Location: mis_llamados.php");
-            exit();
-        } elseif ($_POST['accion'] === 'editar') {
-            $idLlamado = intval($_POST['id_llamado']);
-            $titulo = $_POST['titulo'];
-            $desarrollo = $_POST['desarrollo'];
-            $vacantes = intval($_POST['vacantes']);
-            $horario = $_POST['horario'];
-            $imagenActual = $_POST['imagen_actual'] ?? '';
-
-            // subida de nueva imagen
-            $rutaImagen = $imagenActual;
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                $nombreFoto = time() . '_' . basename($_FILES['imagen']['name']);
-                $dirDestino = 'static/img/llamados';
-                if (!is_dir($dirDestino)) {
-                    mkdir($dirDestino, 0777, true);
-                }
-                $rutaDestino = $dirDestino . $nombreFoto;
-                if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
-                    $rutaImagen = $rutaDestino;
-                }
-            }
-
-            $llamadoLogica->modificarLlamado($idLlamado, $titulo, $desarrollo, $vacantes, $horario, $rutaImagen);
-            header("Location: mis_llamados.php");
-            exit();
-        }
-    }
-}
+$llamadoLogica = $datosVista['llamadoLogica'];
+$misLlamados   = $datosVista['mis_llamados'];
+$mensaje_exito = $datosVista['mensaje_exito'];
+$mensaje_error = $datosVista['mensaje_error'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -60,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="all_app">
 
-        <?php include 'header.php'; ?>
+        <?php include __DIR__ . '/header.php'; ?>
 
         <div class="contenido_medio">
 
@@ -87,6 +48,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
+            <?php if (!empty($mensaje_exito)): ?>
+                <div class="alerta-exito" style="color: #28a745; font-weight: bold; margin-bottom: 15px;"><?php echo htmlspecialchars($mensaje_exito); ?></div>
+            <?php endif; ?>
+
+            <?php if (!empty($mensaje_error)): ?>
+                <div class="alerta-error" style="color: #d9534f; font-weight: bold; margin-bottom: 15px;"><?php echo htmlspecialchars($mensaje_error); ?></div>
+            <?php endif; ?>
+
+            <!-- TARJETA FORMULARIO PARA CREAR NUEVO LLAMADO -->
+            <div class="admin-form-card">
+                <h3 class="titulo-form-admin"> Publicar Nuevo Llamado</h3>
+                
+                <div class="tarjeta_cuerpo">
+                    <div class="post_imagen_div">
+                        <img src="static/img/llamados/default.jpg" alt="Imagen por defecto" class="post_imagen">
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" class="form-crear-llamado">
+                        <input type="hidden" name="accion" value="crear">
+                        
+                        <div class="form-grupo">
+                            <label>Imagen del Llamado:</label>
+                            <input type="file" name="imagen" accept="image/*" required>
+                        </div>
+
+                        <div class="form-grupo">
+                            <label>Título:</label>
+                            <input type="text" name="titulo" placeholder="Ej: Desarrollador Web PHP" required>
+                        </div>
+                        
+                        <div class="form-grupo">
+                            <label>Desarrollo:</label>
+                            <textarea name="desarrollo" rows="3" placeholder="Detalles y requisitos del puesto..." required></textarea>
+                        </div>
+                        
+                        <div class="form-row-triple">
+                            <div class="form-grupo">
+                                <label>Vacantes:</label>
+                                <input type="number" name="vacantes" value="1" min="1" required>
+                            </div>
+                            
+                            <div class="form-grupo">
+                                <label>Horario:</label>
+                                <input type="text" name="horario" placeholder="Ej: 09:00 - 17:00" required>
+                            </div>
+
+                            <div class="form-grupo">
+                                <label>Fecha:</label>
+                                <input type="date" name="fecha" value="<?php echo date('Y-m-d'); ?>" required>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 10px;">
+                            <button type="submit" class="btn_guardar">Publicar Llamado</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- LISTADO DE LLAMADOS DE LA EMPRESA -->
             <?php if (!empty($misLlamados)): ?>
                 <?php foreach ($misLlamados as $llamado): ?>
                     
@@ -98,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- MUESTRA LA IMAGEN ACTUAL DEL LLAMADO -->
                             <div class="post_imagen_div">
                                 <?php 
-                                    $fotoMostrar = !empty($llamado['Imagen']) ? $llamado['Imagen'] : 'static/img/default_llamado.png'; 
+                                    $fotoMostrar = !empty($llamado['Imagen']) ? $llamado['Imagen'] : 'static/img/llamados/default.jpg'; 
                                 ?>
                                 <img src="<?php echo htmlspecialchars($fotoMostrar); ?>" alt="Foto del llamado" class="post_imagen">
                             </div>
@@ -190,14 +211,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <?php 
-            if (file_exists('footer.php')) {
-                include 'footer.php';
+            if (file_exists(__DIR__ . '/footer.php')) {
+                include __DIR__ . '/footer.php';
             }
         ?>
 
     </div>
 
-   <script src="static/javascript/java_mis_llamados.js"></script>
    <script src="static/javascript/java_index.js"></script> 
 
 </body>

@@ -1,13 +1,13 @@
 /* --- DEFINIMOS PARAMETROS DE LA PAGINA EN GENERAL --- */
 * {
-    font-family: "Google Sans", sans-serif; /* --- FUENTE DE LA APP --- */
+    font-family: "Google Sans", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
     font-variation-settings: "GRAD" 0;
 }
 
-/* --- DEFINIMOS PARAMETRO DEL BODY (MARGIN + PADDING) PARA COMODIDAD DE DISEÑO --- */
+/* --- DEFINIMOS PARAMETRO DEL BODY (MARGIN + PADDING) --- */
 body {
     margin: 0;
     padding: 0;
@@ -15,7 +15,7 @@ body {
     background-color: rgb(200, 209, 216);
 }
 
-/* --- "all_app" ES UN CONTENEDOR QUE COMO SU NOMBRE INDICA, CONTIENE LA APP EN EL 100% DEL VIEWPORT --- */
+/* --- CONTENEDOR PRINCIPAL DE LA APP --- */
 .all_app {
     display: flex;
     flex-direction: column;
@@ -24,7 +24,7 @@ body {
     width: 100vw;    
 }
 
-/* --- DEFINE LA BARRA SUPERIOR QUE CONTIENE EL "BUSCADOR" "NOTIFICACIONES" "PERFIL" --- */
+/* --- BARRA SUPERIOR (USERCENTER) --- */
 .usercenter {
     display: flex;
     background-color: #2e4957;
@@ -41,7 +41,6 @@ body {
     margin-right: auto;
 }
 
-
 /* --- ESTILOS DEL MENÚ DESPLEGABLE --- */
 .perfil_desplegable {
     position: relative;
@@ -54,12 +53,12 @@ body {
     transition: transform 0.2s ease;
 }
 
-#perfil_boton:hover { /* --- ANIMACIÓN AL PASAR EL MOUSE POR EL ICONO --- */
+#perfil_boton:hover {
     transform: scale(1.1);
 }
 
 .menu_desplegable {
-    display: none; /* --- OCULTA EL MENÚ POR DEFECTO --- */
+    display: none;
     position: absolute;
     right: 0;
     top: 35px;
@@ -72,7 +71,6 @@ body {
     flex-direction: column;
 }
 
-/* CLASE DE JAVASCRIPT PARA ACTIVAR/DESACTIVAR EL MENÚ */
 .menu_desplegable.mostrar {
     display: flex;
 }
@@ -89,10 +87,10 @@ body {
 }
 
 .menu_desplegable_item:hover {
-    background-color: #f0f4f8; /* --- AL PASAR EL MOUSE POR ENCIMA DE CADA ITEM CAMBIA EL COLOR DEL FONDO --- */
+    background-color: #f0f4f8;
 }
 
-/* --- ESTILO DE LA BARRA DE BÚSQUEDA --- */
+/* --- BARRA DE BÚSQUEDA --- */
 input[type="search"] {
     width: 80%;
     height: 25px;
@@ -108,18 +106,16 @@ input[type="search"] {
     margin-right: 6vh;
 }
 
-/* --- ESTILOS AL PLACEHOLDER (EL TEXTO DENTRO DE LOS INPUTS) --- */
 ::placeholder {
     font-size: medium;
     opacity: 80;
 }
 
-/* --- MARGEN PARA ALEJAR LA CAMPANA DEL ICONO DE USUARIO --- */
-#icono_campana{
+#icono_campana {
     margin-right: 15px;
 }
 
-/* --- TARJETAS DE LLAMADOS CENTRADAS --- */
+/* --- TARJETAS DE ADMINISTRACIÓN Y CREACIÓN --- */
 .admin-form-card {
     background-color: #2e4957;
     width: 60%;
@@ -134,7 +130,15 @@ input[type="search"] {
     color: white;
 }
 
-/* --- BOTÓN GUARDAR --- */
+.titulo-form-admin {
+    margin: 0 0 15px 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+/* --- BOTONES --- */
 .btn_guardar {
     background-color: #4f88d9;
     color: white;
@@ -151,7 +155,7 @@ input[type="search"] {
     background-color: #416ba6;
     transform: scale(1.02);
 }
-/* --- BOTÓN ELIMINAR --- */
+
 .btn_eliminar {
     background-color: #d9534f;
     color: white;
@@ -197,7 +201,7 @@ input[type="search"] {
     color: #e0e0e0;
 }
 
-/* --- CORRECCIÓN DE CAMPOS DENTRO DE LAS TARJETAS DE MIS LLAMADOS --- */
+/* --- CAMPOS Y FORMULARIOS INTERNOS --- */
 .admin-form-card .form-crear-llamado {
     display: flex;
     flex-direction: column;
@@ -219,6 +223,7 @@ input[type="search"] {
 
 .admin-form-card .form-grupo input[type="text"],
 .admin-form-card .form-grupo input[type="number"],
+.admin-form-card .form-grupo input[type="date"],
 .admin-form-card .form-grupo textarea {
     width: 100%;
     padding: 10px;

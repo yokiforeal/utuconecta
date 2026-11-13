@@ -1,84 +1,10 @@
-<<<<<<< Updated upstream
-*{
-    font-family: "Google Sans", sans-serif;
-=======
-/* --- ESTILOS PARA EL MODAL DE POSTULACIÓN --- */
-.modal-postulacion {
-    display: none;
-    position: fixed;
-    z-index: 99999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-contenido {
-    background-color: #2e4957;
-    padding: 25px;
-    border-radius: 15px;
-    width: 400px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-}
-
-.modal-contenido input, 
-.modal-contenido textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid white;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    box-sizing: border-box;
-}
-
-/* --- ALERTAS DE ÉXITO Y ERROR --- */
-.alerta-exito {
-    background-color: #d4edda;
-    color: #231676;
-    border: 1px solid #c3e6cb;
-    padding: 12px 20px;
-    width: 55%;
-    margin: 15px auto;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.alerta-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 12px 20px;
-    width: 60%;
-    margin: 15px auto;
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* --- DEFINIMOS PARAMETROS DE LA PAGINA EN GENERAL --- */
 * {
-    font-family: "Google Sans", sans-serif; /* --- FUENTE DE LA APP --- */
->>>>>>> Stashed changes
+    font-family: "Google Sans", sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
-    font-variation-settings:
-    "GRAD" 0;
-
 }
-
+/* --- DEFINIMOS PARAMETRO DEL BODY (MARGIN + PADDING) PARA COMODIDAD DE DISEÑO --- */
 body {
     margin: 0;
     padding: 0;
@@ -86,21 +12,17 @@ body {
     background-color: rgb(200, 209, 216);
 }
 
-.all-app{
+/* --- "all_app" ES UN CONTENEDOR QUE COMO SU NOMBRE INDICA, CONTIENE LA APP EN EL 100% DEL VIEWPORT --- */
+.all_app {
     display: flex;
     flex-direction: column;
     background-color: rgb(200, 209, 216);
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;    
 }
 
-.rectangulo-azul{
-    background-color: #2e4957;
-    height: 40px;
-    width: 100%;
-}
-
-.usercenter{
+/* --- DEFINE LA BARRA SUPERIOR QUE CONTIENE EL "BUSCADOR" "NOTIFICACIONES" "PERFIL" --- */
+.usercenter {
     display: flex;
     background-color: #2e4957;
     height: 10%;    
@@ -114,33 +36,103 @@ body {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
-.post{
+/* --- ESTILOS DEL MENÚ DESPLEGABLE --- */
+.perfil_desplegable {
+    position: relative;
+    display: inline-block;
+    margin-right: 25px;
+}
+
+#perfil_boton {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#perfil_boton:hover { /* --- ANIMACIÓN AL PASAR EL MOUSE POR EL ICONO --- */
+    transform: scale(1.1);
+}
+
+.menu_desplegable {
+    display: none; /* --- OCULTA EL MENÚ POR DEFECTO --- */
+    position: absolute;
+    right: 0;
+    top: 35px;
+    background-color: #ffffff;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+/* CLASE DE JAVASCRIPT PARA ACTIVAR/DESACTIVAR EL MENÚ */
+.menu_desplegable.mostrar {
     display: flex;
+}
+
+.menu_desplegable_item {
+    color: #2e4957;
+    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.menu_desplegable_item:hover {
+    background-color: #f0f4f8; /* --- AL PASAR EL MOUSE POR ENCIMA DE CADA ITEM CAMBIA EL COLOR DEL FONDO --- */
+}
+
+/* --- ESTILO PARA CADA POST --- */
+.post {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     background-color: #2e4957;
-    height: 300px;    
+    height: 300px;               
     width: 60%;
     border-radius: 15px;
     margin-top: 5px;
     margin-bottom: 5px;
-    flex-shrink: 0;
+    flex-shrink: 0; /* ---  ES PARA QUE NO SE DEFORMEN LOS POSTS --- */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
+/* --- ESTANDARIZACIÓN DE LAS IMÁGENES --- */
 .post_imagen {
-    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1 / 1; /* --- CONVIERTE EN CUADRADO TODAS LAS IMAGENES SIN ESTIRARLAS --- */
     object-fit: cover; 
-    border-radius: 30px;
-    height: 90%;
-    margin-top: 3vh;
-    margin-left: 2vh;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
-.post_imagen_div{
-    height: 90%;
-    width: 50%;
+/* --- CONTENEDOR PARA POSICIONAR LA IMÁGEN --- */
+.post_imagen_div {
+    width: 35%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* CONTENEDOR DE LOS TEXTOS A LA DERECHA EN CADA POST */
+.post_texto {
+    display: flex;
+    flex-direction: column;   
+    width: 70%;                            
+    height: 100%;
+    padding: 25px 25px 25px 10px;
+    color: #ffffff;
+    box-sizing: border-box;
+    overflow: hidden;       
+}
 
 .contenido_medio {
     display: flex;
@@ -150,23 +142,34 @@ body {
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-
 }
 
-.fa-user{
-    margin-right: 25px;
-}
-
-.titulo_post{
-    margin-top: 0;
-    margin-left: 40vh;
+.titulo_post {
+    margin: 0 0 10px 0;
     color: #ffffff;
-    text-align: left;
-    transform: translateY(-250px);
-    margin-left: 280px ;    
+    font-size: 2.0rem;
+    
 }
 
-Input[type="search"]{
+.fa-clipboard {
+    margin-left: 15px;
+}
+
+/* ESTILO DE EL PÁRRAFO DE LLAMADO EN CADA POST */
+.parrafo_post {
+    margin: 0;
+    color: #ffffff;
+    text-align: justify;
+    line-height: 1.4;
+    word-break: break-word;
+    display: -webkit-box; /* --- NO TENGO CLARO QUE ES ESTO PES ES PARA CONTAR LOS PARRAFOS --- */
+    -webkit-line-clamp: 6; /* --- RESTRINGE A 6 PÁRRAFOS  --- */
+    -webkit-box-orient: vertical; /* --- HACE QUE LOS PÁRRAFOS SE CUENTEN VERTICALMENTE --- */
+    overflow: hidden;
+}
+
+/* --- ESTILO DE LA BARRA DE BÚSQUEDA --- */
+input[type="search"] {
     width: 80%;
     height: 25px;
     border: 1px solid;
@@ -175,17 +178,16 @@ Input[type="search"]{
     font-size: 18px;
     color: rgb(255, 255, 255);
     cursor: pointer;
-    outline:#ffffff;
+    outline: #ffffff;
     outline: 5px;
     margin: 1vh;
     margin-right: 6vh;
 }
 
-::placeholder{
+/* --- ESTILOS AL PLACEHOLDER (EL TEXTO DENTRO DE LOS INPUTS) --- */
+::placeholder {
     font-size: medium;
     opacity: 80;
-<<<<<<< Updated upstream
-=======
 }
 
 /* --- MARGEN PARA ALEJAR LA CAMPANA DEL ICONO DE USUARIO --- */
@@ -193,55 +195,54 @@ Input[type="search"]{
     margin-right: 15px;
 }
 
-/* --- BOTONES DE POSTULAR --- */
-.btn-postularse, .btn-cancelar {
-    padding: 5px 20px;
-    border: solid 2px white;
-    border-radius: 6px;
-    font-size: 0.67rem;
+/* --- BOTONES DE POSTULAR (NUEVOS ESTILOS) --- */
+.btn_postularse, .btn-cancelar {
+    padding: 10px 22px;
+    border-radius: 30px; /* Estilo tipo píldora moderno */
+    font-size: 0.85rem;
     font-weight: bold;
     cursor: pointer; 
-    transition: background 0.3s ease;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.btn-postularse {
-    background-color: #2e4957;
-    color: white;   
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+.btn_postularse {
+    background-color: #ffffff;
+    color: #2e4957;
+    border: 2px solid #ffffff;
+
 }
 
-.btn-postularse:hover {
-    background-color: #416ba6;
-    transform: scale(1.02);
+.btn_postularse:hover {
+    background-color: transparent;
+    color: #ffffff;
+    border-color: #ffffff;
+    transform: translateY(-2px); /* Pequeño efecto de elevación */
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.2);
 }
 
 .btn-cancelar {
-    display: none;
     background-color: #d9534f;
     color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+    border: 2px solid #d9534f;
+    margin-left: 10px;
 }
 
 .btn-cancelar:hover {
     background-color: #c9302c;
-    transform: scale(1.02);
+    border-color: #c9302c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(217, 83, 79, 0.3);
 }
 
 .botones_postularse {
     display: flex;
-    flex-direction: row; /* para que si hay varios botones estén en fila */
-    margin-top: 10px;
-    align-self: flex-start; /* para que este a la izquierda */
+    flex-direction: row; 
+    margin-top: 15px;
+    align-self: flex-start; 
 }
 
 /* --- ESTILOS NUEVOS DEL LLAMADO (BORRAR EN CASO DE PROBLEMAS) --- */
@@ -269,5 +270,47 @@ Input[type="search"]{
     display: flex;
     flex-direction: column;
     gap: 4px;
->>>>>>> Stashed changes
+}
+
+/* --- ESTILOS DEL MODAL DE POSTULACIÓN --- */
+.modal-postulacion {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-contenido {
+    background-color: #2e4957;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-contenido input, 
+.modal-contenido textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: white;
+    color: #2e4957;
+    box-sizing: border-box;
+}
+
+.modal-contenido textarea {
+    resize: vertical;
+    height: 80px;
 }
