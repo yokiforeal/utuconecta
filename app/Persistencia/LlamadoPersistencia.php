@@ -63,7 +63,7 @@ class LlamadoPersistencia {
     }
 
     public function actualizarLlamado($idLlamado, $titulo, $desarrollo, $vacantes, $horario, $imagen) {
-    $conn = obtenerConexion(); // O tu forma de conectar a la base de datos
+    $conn = obtenerConexion(); 
     
     $sql = "UPDATE llamados 
             SET Titulo = ?, Desarrollo = ?, Vacantes = ?, Horario = ?, Imagen = ? 
@@ -71,8 +71,8 @@ class LlamadoPersistencia {
             
     $stmt = $conn->prepare($sql);
     
-    // Parámetros: 4 strings (s), 1 entero (i), 1 string (s), 1 entero (i)
-    // Orden exacto de los '?': Titulo, Desarrollo, Vacantes, Horario, Imagen, ID_llamado
+    
+    // Titulo, Desarrollo, Vacantes, Horario, Imagen, ID_llamado
     $stmt->bind_param("ssissi", $titulo, $desarrollo, $vacantes, $horario, $imagen, $idLlamado);
     
     $resultado = $stmt->execute();
@@ -85,14 +85,14 @@ class LlamadoPersistencia {
 
     public function eliminarLlamado($idLlamado) {
         $conn = obtenerConexion();
-        // Borramos primero las postulaciones asociadas para mantener la integridad referencial
+        // Borramos primero las postulaciones por el tema de las referencias y eso
         $sqlPost = "DELETE FROM postula WHERE ID_llamado = ?";
         $stmtPost = $conn->prepare($sqlPost);
         $stmtPost->bind_param("i", $idLlamado);
         $stmtPost->execute();
         $stmtPost->close();
 
-        // Luego eliminamos el llamado
+        // Despues eliminamos el llamado
         $sql = "DELETE FROM llamados WHERE ID_llamado = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $idLlamado);
@@ -100,6 +100,29 @@ class LlamadoPersistencia {
         $stmt->close();
         $conn->close();
         return $exito;
+    }
+
+    public function buscarLlamados($termino) {
+        $conn = obtenerConexion();
+        $busqueda = "%" . $termino . "%";
+        $sql = "SELECT ID_llamado, ID_empresa, Horario, Imagen, Desarrollo, Fecha, Titulo, Vacantes 
+                FROM llamados 
+                WHERE Titulo LIKE ? OR Desarrollo LIKE ? 
+                ORDER BY ID_llamado DESC";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $busqueda, $busqueda);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        
+        $llamados = [];
+        while ($row = $resultado->fetch_assoc()) {
+            $llamados[] = $row;
+        }
+        
+        $stmt->close();
+        $conn->close();
+        return $llamados;
     }
 }
 ?>

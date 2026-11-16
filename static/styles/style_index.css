@@ -176,15 +176,17 @@ input[type="search"] {
     background: white;
     border-radius: 5px;
     font-size: 18px;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    outline: #ffffff;
-    outline: 5px;
+    color: #2e4957; /* <-- Cambia el blanco por este */
+    cursor: text;
+    outline: none;
     margin: 1vh;
     margin-right: 6vh;
+    padding-left: 8px; /* Un poco de aire a la izquierda para que no pegue al borde */
 }
 
-/* --- ESTILOS AL PLACEHOLDER (EL TEXTO DENTRO DE LOS INPUTS) --- */
+
+
+/* --- ESTILOS AL PLACEHOLDER --- */
 ::placeholder {
     font-size: medium;
     opacity: 80;
@@ -245,7 +247,7 @@ input[type="search"] {
     align-self: flex-start; 
 }
 
-/* --- ESTILOS NUEVOS DEL LLAMADO (BORRAR EN CASO DE PROBLEMAS) --- */
+/* --- ESTILOS NUEVOS DEL LLAMADO --- */
 .detalles_llamado {
     display: flex;
     gap: 15px;

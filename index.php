@@ -1,6 +1,6 @@
 <?php
 // Carga el archivo de presentación (capa lógica/controlador de la vista)
-require_once 'app/Presentacion/indexPresentacion.php';
+require_once 'app/Presentacion/IndexPresentacion.php';
 
 // Instancia la clase de presentación y obtiene los datos necesarios para la página
 $presentacion = new IndexPresentacion();
@@ -11,6 +11,7 @@ $llamados          = $datosVista['llamados'];
 $mensaje_accion    = $datosVista['mensaje_accion'];
 $error_accion      = $datosVista['error_accion'];
 $postulacionLogica = $datosVista['postulacionLogica'];
+$busqueda          = $datosVista['busqueda'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -28,22 +29,23 @@ $postulacionLogica = $datosVista['postulacionLogica'];
 <body>
     <div class="all_app"> 
         
-        <!-- Incluye la barra de navegación superior (Header) -->
+        <!-- Incluye el header -->
         <?php include __DIR__ . '/header.php'; ?>
 
         <div class="contenido_medio">    
             <!-- Panel superior del usuario (Buscador, notificaciones y menú desplegable de perfil) -->
             <div class="usercenter">
-                <input type="search" placeholder="Buscar...">
-                <i class="fa-regular fa-bell fa-user fa-lg" id="icono_campana" style="color: #ffffff;"></i>
-                
+                <form method="GET" action="index.php" style="display: flex; align-items: center; width: 85%;">
+                    <input type="search" name="buscar" placeholder="Buscar..." value="<?php echo htmlspecialchars($busqueda); ?>" style="color: #2e4957; padding-left: 10px;">
+                </form>
+
+                <i class="fa-regular fa-bell fa-lg" id="icono_campana" style="color: #ffffff;"></i>
+    
                 <div class="perfil_desplegable">
                     <i class="fa-regular fa-user fa-lg" id="perfil_boton" style="color: #ffffff;"></i>
 
-                    <!-- Menú desplegable del perfil del usuario -->
                     <div class="menu_desplegable" id="menu_desplegable_perfil">
                         <a href="perfil.php" class="menu_desplegable_item">
-                            <!-- Muestra el nombre y apellido del usuario de manera segura usando htmlspecialchars -->
                             <i class="fa-regular fa-id-card"></i> Perfil (<?php echo htmlspecialchars($_SESSION['nombre'] . " " . $_SESSION['apellido']); ?>)
                         </a>
 
@@ -59,11 +61,11 @@ $postulacionLogica = $datosVista['postulacionLogica'];
             </div>
 
             <!-- Muestra una alerta de éxito si hay un mensaje de acción proveniente del backend -->
-           <?php if (!empty($mensaje_accion)): ?>
+            <?php if (!empty($mensaje_accion)): ?>
                 <div class="alerta-exito"><?php echo $mensaje_accion; ?></div>
-           <?php endif; ?>
+            <?php endif; ?>
 
-           <!-- Muestra una alerta de error si ocurrió algún inconveniente -->
+            <!-- Muestra una alerta de error si ocurrió algún inconveniente -->
             <?php if (!empty($error_accion)): ?>
                 <div class="alerta-error"><?php echo $error_accion; ?></div>
             <?php endif; ?>
@@ -118,7 +120,7 @@ $postulacionLogica = $datosVista['postulacionLogica'];
                 <?php endforeach; ?>
             <?php else: ?>
                 <!-- Mensaje alternativo si no hay registros -->
-                <p style="color: #2e4957; margin-top: 20px;">No hay llamados disponibles en este momento.</p>
+                <p style="color: #2e4957; margin-top: 20px;">No se encontraron llamados disponibles.</p>
             <?php endif; ?>
 
         </div>

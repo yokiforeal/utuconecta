@@ -58,9 +58,6 @@ class UsuarioPresentacion {
             $localidad    = trim($_POST['localidad'] ?? '');
             $codigoPostal = trim($_POST['codigo_postal'] ?? '');
             
-            // Opcional: si tu formulario distingue si es empresa o postulante, puedes ajustarlo aquí o registrar por defecto como postulante
-            $esEmpresa    = isset($_POST['es_empresa']) ? true : false;
-            $nombreEmp    = $_POST['nombre_empresa'] ?? '';
 
             $res = $this->logica->registrarUsuario($cedula, $nombre, $apellido, $email, $codigoPostal, $password, $localidad, $esEmpresa, $nombreEmp);
 

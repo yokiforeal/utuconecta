@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../Persistencia/LlamadoPersistencia.php';
-require_once __DIR__ . '/../Persistencia/postulacionPersistencia.php'; 
+require_once __DIR__ . '/../Persistencia/PostulacionPersistencia.php'; 
 
 class LlamadoLogica {
     private $persistencia;
@@ -67,6 +67,14 @@ class LlamadoLogica {
 
     public function obtenerPorEmpresaCI($ci) {
     return $this->persistencia->obtenerPorEmpresaCI($ci);
+    }
+
+    public function buscarLlamados($termino) {
+        $terminoLimpio = trim($termino);
+        if (empty($terminoLimpio)) {
+            return $this->listarLlamados();
+        }
+        return $this->persistencia->buscarLlamados($terminoLimpio);
     }
 }
 ?>

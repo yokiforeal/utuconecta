@@ -60,7 +60,7 @@ class UsuarioPersistencia {
     public function guardar(Usuario $usuario, $esEmpresa = false, $nombreEmpresa = "", $localidad = "") {
         $conn = obtenerConexion();
         
-        // Iniciamos transacción para asegurar consistencia entre usuarios y postulantes/empresas
+        // transacción para asegurar consistencia entre usuarios y postulantes/empresas
         $conn->begin_transaction();
 
         try {
@@ -75,6 +75,8 @@ class UsuarioPersistencia {
             $foto = $usuario->getFotoPerfil();
             $pass = $usuario->getPassword();
 
+
+            // lo de isssiss es los tipos de datos: i -> entero s-> string 
             $stmt1->bind_param("isssiss", $ci, $nombre, $apellido, $mail, $cp, $foto, $pass); 
             $stmt1->execute();
             $stmt1->close();

@@ -59,6 +59,6 @@ class PostulacionPersistencia { // <--- Asegúrate de que diga 'PostulacionPersi
     $stmt->close();
     $conn->close();
     return $postulantes;
-}
+    }
 }
 ?>
