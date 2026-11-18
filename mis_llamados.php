@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'app/Presentacion/LlamadoPresentacion.php';
 
 $presentacion = new LlamadoPresentacion();
@@ -112,68 +113,74 @@ $mensaje_error = $datosVista['mensaje_error'];
                 <?php foreach ($misLlamados as $llamado): ?>
                     
                     <div class="admin-form-card">
-                        <h3 class="titulo-form-admin"><?php echo htmlspecialchars($llamado['Titulo']); ?></h3>
+                        <h3 class="titulo-form-admin"><?php echo htmlspecialchars($llamado->getTitulo()); ?></h3>
                         
                         <div class="tarjeta_cuerpo">
                             
                             <!-- MUESTRA LA IMAGEN ACTUAL DEL LLAMADO -->
                             <div class="post_imagen_div">
                                 <?php 
-                                    $fotoMostrar = !empty($llamado['Imagen']) ? $llamado['Imagen'] : 'static/img/llamados/default.jpg'; 
+                                    $fotoMostrar = !empty($llamado->getImagen()) ? $llamado->getImagen() : 'static/img/llamados/default.jpg'; 
                                 ?>
                                 <img src="<?php echo htmlspecialchars($fotoMostrar); ?>" alt="Foto del llamado" class="post_imagen">
                             </div>
 
-                            <!-- FORMULARIO DE EDICIÓN CON CARGA DE ARCHIVO -->
-                            <form method="POST" enctype="multipart/form-data" class="form-crear-llamado">
-                                <input type="hidden" name="accion" value="editar">
-                                <input type="hidden" name="id_llamado" value="<?php echo $llamado['ID_llamado']; ?>">
-                                <input type="hidden" name="imagen_actual" value="<?php echo htmlspecialchars($llamado['Imagen'] ?? ''); ?>">
-                                
-                                <div class="form-grupo">
-                                    <label>Cambiar Imagen:</label>
-                                    <input type="file" name="imagen" accept="image/*">
-                                </div>
-
-                                <div class="form-grupo">
-                                    <label>Título:</label>
-                                    <input type="text" name="titulo" value="<?php echo htmlspecialchars($llamado['Titulo']); ?>" required>
-                                </div>
-                                
-                                <div class="form-grupo">
-                                    <label>Desarrollo:</label>
-                                    <textarea name="desarrollo" rows="3" required><?php echo htmlspecialchars($llamado['Desarrollo']); ?></textarea>
-                                </div>
-                                
-                                <div class="form-row-triple">
+                            <!-- CONTENEDOR DE FORMULARIOS DE EDICIÓN Y ELIMINACIÓN -->
+                            <div style="flex: 1;">
+                                <!-- FORMULARIO DE EDICIÓN CON CARGA DE ARCHIVO -->
+                                <form method="POST" enctype="multipart/form-data" class="form-crear-llamado">
+                                    <input type="hidden" name="accion" value="editar">
+                                    <input type="hidden" name="id_llamado" value="<?php echo $llamado->getIdLlamado(); ?>">
+                                    <input type="hidden" name="imagen_actual" value="<?php echo htmlspecialchars($llamado->getImagen() ?? ''); ?>">
+                                    
                                     <div class="form-grupo">
-                                        <label>Vacantes:</label>
-                                        <input type="number" name="vacantes" value="<?php echo $llamado['Vacantes']; ?>" required>
+                                        <label>Cambiar Imagen:</label>
+                                        <input type="file" name="imagen" accept="image/*">
+                                    </div>
+
+                                    <div class="form-grupo">
+                                        <label>Título:</label>
+                                        <input type="text" name="titulo" value="<?php echo htmlspecialchars($llamado->getTitulo()); ?>" required>
                                     </div>
                                     
                                     <div class="form-grupo">
-                                        <label>Horario:</label>
-                                        <input type="text" name="horario" value="<?php echo htmlspecialchars($llamado['Horario']); ?>" required>
+                                        <label>Desarrollo:</label>
+                                        <textarea name="desarrollo" rows="3" required><?php echo htmlspecialchars($llamado->getDesarrollo()); ?></textarea>
                                     </div>
-                                </div>
-                                
-                                <div style="display: flex; gap: 10px; margin-top: 5px; align-items: center;">
-                                    <button type="submit" class="btn_guardar">Guardar Cambios</button>
-                            </form>
+                                    
+                                    <div class="form-row-triple">
+                                        <div class="form-grupo">
+                                            <label>Vacantes:</label>
+                                            <input type="number" name="vacantes" value="<?php echo $llamado->getVacantes(); ?>" required>
+                                        </div>
+                                        
+                                        <div class="form-grupo">
+                                            <label>Horario:</label>
+                                            <input type="text" name="horario" value="<?php echo htmlspecialchars($llamado->getHorario()); ?>" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: 10px; margin-top: 5px; align-items: center;">
+                                        <button type="submit" class="btn_guardar">Guardar Cambios</button>
+                                    </div>
+                                </form>
 
+                                <div style="margin-top: 10px;">
                                     <form method="POST" style="margin: 0;">
                                         <input type="hidden" name="accion" value="eliminar">
-                                        <input type="hidden" name="id_llamado" value="<?php echo $llamado['ID_llamado']; ?>">
+                                        <input type="hidden" name="id_llamado" value="<?php echo $llamado->getIdLlamado(); ?>">
                                         <button type="submit" class="btn_eliminar" onclick="return confirm('¿Estás seguro de eliminar este llamado y todas sus postulaciones?');">Eliminar Llamado</button>
                                     </form>
                                 </div>
+                            </div>
+
                         </div>
 
                         <!-- SECCIÓN POSTULANTES -->
                         <div class="seccion-postulantes">
                             <h4 style="margin-top: 0; color: #ffffff; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px;">Postulantes Inscriptos:</h4>
                             <?php 
-                                $postulantes = $llamadoLogica->verPostulantes($llamado['ID_llamado']);
+                                $postulantes = $llamadoLogica->verPostulantes($llamado->getIdLlamado());
                             ?>
                             <?php if (!empty($postulantes)): ?>
                                 <ul>

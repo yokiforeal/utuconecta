@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/../../conexion.php';
+require_once __DIR__ . '/../Entidades/postulacion.php';
 
-class PostulacionPersistencia { // <--- Asegúrate de que diga 'PostulacionPersistencia' con P y P mayúsculas
+class PostulacionPersistencia { 
     
     public function yaSePostulo($ci, $idLlamado) {
         $conn = obtenerConexion();
@@ -43,22 +44,38 @@ class PostulacionPersistencia { // <--- Asegúrate de que diga 'PostulacionPersi
     }
 
     public function obtenerPostulantesPorLlamado($idLlamado) {
-    $conn = obtenerConexion();
-    $sql = "SELECT p.*, u.Nombre, u.Apellido, u.Mail AS Correo 
-            FROM postula p 
-            JOIN usuarios u ON p.CI = u.CI 
-            WHERE p.ID_llamado = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $idLlamado);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    $postulantes = [];
-    while ($row = $resultado->fetch_assoc()) {
-        $postulantes[] = $row;
-    }
-    $stmt->close();
-    $conn->close();
-    return $postulantes;
+        $conn = obtenerConexion();
+        $sql = "SELECT p.*, u.Nombre, u.Apellido, u.Mail AS Correo 
+                FROM postula p 
+                JOIN usuarios u ON p.CI = u.CI 
+                WHERE p.ID_llamado = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idLlamado);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $postulantes = [];
+        
+        while ($row = $resultado->fetch_assoc()) {
+            $postulantes[] = [
+                'entidad' => new Postulacion(
+                    $row['CI'],
+                    $row['ID_llamado'],
+                    $row['Fecha'],
+                    $row['Nota'],
+                    $row['Archivos'],
+                    $row['Expectativa_salarial']
+                ),
+                'Nombre' => $row['Nombre'],
+                'Apellido' => $row['Apellido'],
+                'CI' => $row['CI'],
+                'Expectativa_salarial' => $row['Expectativa_salarial'],
+                'Nota' => $row['Nota'],
+                'Archivos' => $row['Archivos']
+            ];
+        }
+        $stmt->close();
+        $conn->close();
+        return $postulantes;
     }
 }
 ?>

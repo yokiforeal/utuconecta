@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../Persistencia/postulacionPersistencia.php';
+require_once __DIR__ . '/../Persistencia/PostulacionPersistencia.php';
 
 class PostulacionLogica {
     private $persistencia;
@@ -52,7 +52,7 @@ class PostulacionLogica {
             return ["exito" => true, "mensaje" => "Has cancelado tu postulación."];
         } else {
             return ["exito" => false, "mensaje" => "No se pudo cancelar la postulación."];
-        }
+        }           
     }
 
     public function verificarSiPostulo($ci, $idLlamado) {

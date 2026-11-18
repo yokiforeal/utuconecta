@@ -1,115 +1,102 @@
 <?php
-require_once __DIR__ . '/../../conexion.php';
 require_once __DIR__ . '/../Entidades/Usuario.php';
+require_once __DIR__ . '/../Entidades/Empresa.php';
 
 class UsuarioPersistencia {
+    private $conexion;
+
+    public function __construct() {
+        $archivoConexion = __DIR__ . '/../../conexion.php';
+        if (file_exists($archivoConexion)) {
+            require_once $archivoConexion;
+        }
+
+        if (isset($conn) && $conn instanceof mysqli) {
+            $this->conexion = $conn;
+        } else {
+            $this->conexion = new mysqli("localhost", "root", "", "utuconecta");
+            if ($this->conexion->connect_error) {
+                die("Error de conexión a la base de datos: " . $this->conexion->connect_error);
+            }
+            $this->conexion->set_charset("utf8");
+        }
+    }
 
     public function buscarPorCI($ci) {
-        $conn = obtenerConexion();
-        $sql = "SELECT CI, Nombre, Apellido, Mail, Codigo_Postal, Foto_perfil, Password FROM usuarios WHERE CI = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $ci);
+        $sql = "SELECT * FROM usuarios WHERE CI = ?";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            return null;
+        }
+        $stmt->bind_param("s", $ci);
         $stmt->execute();
-        $res = $stmt->get_result();
+        $resultado = $stmt->get_result();
 
-        if ($row = $res->fetch_assoc()) {
-            $stmt->close();
-            $conn->close();
+        if ($row = $resultado->fetch_assoc()) {
             return new Usuario(
                 $row['CI'],
                 $row['Nombre'],
                 $row['Apellido'],
                 $row['Mail'],
-                $row['Codigo_Postal'],
-                $row['Foto_perfil'],
+                $row['Codigo_Postal'] ?? $row['codigo_postal'] ?? '',
+                $row['Foto_perfil'] ?? null,
                 $row['Password']
             );
         }
-
-        $stmt->close();
-        $conn->close();
         return null;
     }
 
-    public function esPostulante($ci) {
-        $conn = obtenerConexion();
-        $sql = "SELECT CI FROM postulantes WHERE CI = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $ci);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $existe = ($res->num_rows > 0);
-        $stmt->close();
-        $conn->close();
-        return $existe;
-    }
-
     public function esEmpresa($ci) {
-        $conn = obtenerConexion();
-        $sql = "SELECT ID_empresa, Nombre_empresa FROM empresas WHERE CI = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $ci);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $empresaData = $res->fetch_assoc();
-        $stmt->close();
-        $conn->close();
-        return $empresaData ? $empresaData : false;
-    }
-
-    public function guardar(Usuario $usuario, $esEmpresa = false, $nombreEmpresa = "", $localidad = "") {
-        $conn = obtenerConexion();
-        
-        // transacción para asegurar consistencia entre usuarios y postulantes/empresas
-        $conn->begin_transaction();
-
-        try {
-            $sqlUsuario = "INSERT INTO usuarios (CI, Nombre, Apellido, Mail, Codigo_Postal, Foto_perfil, Password) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $stmt1 = $conn->prepare($sqlUsuario);
-            
-            $ci = $usuario->getCi();
-            $nombre = $usuario->getNombre();
-            $apellido = $usuario->getApellido();
-            $mail = $usuario->getMail();
-            $cp = $usuario->getCodigoPostal();
-            $foto = $usuario->getFotoPerfil();
-            $pass = $usuario->getPassword();
-
-
-            // lo de isssiss es los tipos de datos: i -> entero s-> string 
-            $stmt1->bind_param("isssiss", $ci, $nombre, $apellido, $mail, $cp, $foto, $pass); 
-            $stmt1->execute();
-            $stmt1->close();
-
-            if ($esEmpresa) {
-                $sqlEmpresa = "INSERT INTO empresas (CI, Nombre_empresa, Localidad) VALUES (?, ?, ?)";
-                $stmt2 = $conn->prepare($sqlEmpresa);
-                $stmt2->bind_param("iss", $ci, $nombreEmpresa, $localidad);
-                $stmt2->execute();
-                $stmt2->close();
-            } else {
-                $sqlPostulante = "INSERT INTO postulantes (CI, Localidad) VALUES (?, ?)";
-                $stmt2 = $conn->prepare($sqlPostulante);
-                $stmt2->bind_param("is", $ci, $localidad);
-                $stmt2->execute();
-                $stmt2->close();
-            }
-
-            $conn->commit();
-            $conn->close();
-            return true;
-        } catch (Exception $e) {
-            $conn->rollback();
-            $conn->close();
+        $sql = "SELECT e.id_empresa, e.nombre_empresa FROM empresas e JOIN usuarios u ON e.CI = u.CI WHERE u.CI = ?";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
             return false;
         }
+        $stmt->bind_param("s", $ci);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+
+        if ($row = $resultado->fetch_assoc()) {
+            return new Empresa($row['id_empresa'], $row['nombre_empresa'], $ci);
+        }
+        return false;
     }
 
-    public function actualizar(Usuario $usuario) {
-        $conn = obtenerConexion();
-        $sql = "UPDATE usuarios SET Nombre = ?, Apellido = ?, Mail = ?, Codigo_Postal = ?, Foto_perfil = ? WHERE CI = ?";
-        $stmt = $conn->prepare($sql);
+    public function guardar($usuario, $esEmpresa = false, $nombreEmpresa = "", $localidad = "") {
+        $ci = $usuario->getCi();
+        $nombre = $usuario->getNombre();
+        $apellido = $usuario->getApellido();
+        $mail = $usuario->getMail();
+        $cp = $usuario->getCodigoPostal();
+        $pass = $usuario->getPassword();
 
+        // 1. Guardar en la tabla principal de usuarios
+        $sql = "INSERT INTO usuarios (CI, Nombre, Apellido, Mail, Codigo_Postal, Password) VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+        $stmt->bind_param("ssssss", $ci, $nombre, $apellido, $mail, $cp, $pass);
+
+        if ($stmt->execute()) {
+            // 2. Como el registro es exclusivo de postulantes, lo agregamos siempre a la tabla 'postulantes'
+            $sqlPostulante = "INSERT INTO postulantes (CI) VALUES (?)";
+            $stmtPostulante = $this->conexion->prepare($sqlPostulante);
+            if ($stmtPostulante) {
+                $stmtPostulante->bind_param("s", $ci);
+                $stmtPostulante->execute();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function actualizar($usuario) {
+        $sql = "UPDATE usuarios SET Nombre = ?, Apellido = ?, Mail = ?, Codigo_Postal = ?, Foto_perfil = ? WHERE CI = ?";
+        $stmt = $this->conexion->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
         $nombre = $usuario->getNombre();
         $apellido = $usuario->getApellido();
         $mail = $usuario->getMail();
@@ -117,12 +104,8 @@ class UsuarioPersistencia {
         $foto = $usuario->getFotoPerfil();
         $ci = $usuario->getCi();
 
-        $stmt->bind_param("sssisi", $nombre, $apellido, $mail, $cp, $foto, $ci);
-        $exito = $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-        return $exito;
+        $stmt->bind_param("ssssss", $nombre, $apellido, $mail, $cp, $foto, $ci);
+        return $stmt->execute();
     }
 }
 ?>

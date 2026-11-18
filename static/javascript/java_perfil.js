@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Previsualización de la nueva foto al seleccionarla
+    // Previsualización de la nueva foto al seleccionarla copiado de un video pq no entendia como hacerlo
     if (inputFoto) {
         inputFoto.addEventListener('change', (e) => {
             const archivo = e.target.files[0];

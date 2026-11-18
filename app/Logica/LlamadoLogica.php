@@ -52,6 +52,7 @@ class LlamadoLogica {
             return ["exito" => false, "mensaje" => "Error al guardar el llamado en la base de datos."];
         }
     }
+
     public function modificarLlamado($idLlamado, $titulo, $desarrollo, $vacantes, $horario, $imagen) {
         return $this->persistencia->actualizarLlamado($idLlamado, $titulo, $desarrollo, $vacantes, $horario, $imagen);
     }
@@ -61,12 +62,12 @@ class LlamadoLogica {
     }
 
     public function verPostulantes($idLlamado) {
-    $postPersistencia = new PostulacionPersistencia();
-    return $postPersistencia->obtenerPostulantesPorLlamado($idLlamado);
+        $postPersistencia = new PostulacionPersistencia();
+        return $postPersistencia->obtenerPostulantesPorLlamado($idLlamado);
     }
 
     public function obtenerPorEmpresaCI($ci) {
-    return $this->persistencia->obtenerPorEmpresaCI($ci);
+        return $this->persistencia->obtenerPorEmpresaCI($ci);
     }
 
     public function buscarLlamados($termino) {

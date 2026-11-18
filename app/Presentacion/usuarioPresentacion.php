@@ -52,14 +52,17 @@ class UsuarioPresentacion {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $nombre       = trim($_POST['nombre'] ?? '');
             $apellido     = trim($_POST['apellido'] ?? '');
-            $cedula       = trim($_POST['cedula'] ?? '');
+            $cedula       = trim($_POST['ci'] ?? '');
             $password     = trim($_POST['password'] ?? '');
-            $email        = trim($_POST['email'] ?? '');
+            $email        = trim($_POST['mail'] ?? '');
             $localidad    = trim($_POST['localidad'] ?? '');
             $codigoPostal = trim($_POST['codigo_postal'] ?? '');
             
+            $tipoRegistro  = $_POST['tipo_usuario'] ?? 'postulante';
+            $esEmpresa     = ($tipoRegistro === 'empresa');
+            $nombreEmpresa = trim($_POST['nombre_empresa'] ?? '');
 
-            $res = $this->logica->registrarUsuario($cedula, $nombre, $apellido, $email, $codigoPostal, $password, $localidad, $esEmpresa, $nombreEmp);
+            $res = $this->logica->registrarUsuario($cedula, $nombre, $apellido, $email, $codigoPostal, $password, $localidad, $esEmpresa, $nombreEmpresa);
 
             if ($res['exito']) {
                 $mensaje_exito = $res['mensaje'];
@@ -80,36 +83,41 @@ class UsuarioPresentacion {
             session_start();
         }
 
+        $mensaje_error = "";
+        $mensaje_exito = "";
+        $usuario = null;
+
         if (!isset($_SESSION['usuario'])) {
             header("Location: login.php");
             exit();
         }
 
-        $mensaje_error = "";
-        $mensaje_exito = "";
+        $ci = $_SESSION['usuario'];
 
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $nombre       = trim($_POST['nombre'] ?? '');
             $apellido     = trim($_POST['apellido'] ?? '');
             $email        = trim($_POST['email'] ?? '');
             $codigoPostal = trim($_POST['codigo_postal'] ?? '');
-            $fotoSubida   = $_FILES['foto_perfil'] ?? null;
+            $archivoFoto  = $_FILES['foto_perfil'] ?? null;
 
-            $res = $this->logica->actualizarPerfil($_SESSION['usuario'], $nombre, $apellido, $email, $codigoPostal, $fotoSubida);
+            $resultadoActualizacion = $this->logica->actualizarPerfil($ci, $nombre, $apellido, $email, $codigoPostal, $archivoFoto);
 
-            if ($res['exito']) {
-                $mensaje_exito = $res['mensaje'];
-                $_SESSION['nombre']   = $nombre;
+            if ($resultadoActualizacion['exito']) {
+                $mensaje_exito = $resultadoActualizacion['mensaje'];
+                $_SESSION['nombre'] = $nombre;
                 $_SESSION['apellido'] = $apellido;
+                $usuario = $resultadoActualizacion['usuario'];
             } else {
-                $mensaje_error = $res['mensaje'];
+                $mensaje_error = $resultadoActualizacion['mensaje'];
+                $usuario = $this->logica->obtenerPorCI($ci);
             }
+        } else {
+            $usuario = $this->logica->obtenerPorCI($ci);
         }
 
-        $usuario = $this->logica->obtenerPorCI($_SESSION['usuario']);
-
         return [
-            'usuario'       => $usuario,
+            'usuario' => $usuario,
             'mensaje_exito' => $mensaje_exito,
             'mensaje_error' => $mensaje_error
         ];

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'app/Logica/PostulacionLogica.php'; // O tu clase lógica correspondiente
+require_once 'app/Logica/PostulacionLogica.php'; 
 
 if (!isset($_SESSION['usuario']) || $_SESSION['tipo_usuario'] !== 'postulante') {
     header("Location: login.php");

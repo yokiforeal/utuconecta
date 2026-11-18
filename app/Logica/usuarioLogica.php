@@ -25,16 +25,16 @@ class UsuarioLogica {
 
         if ($password === $usuario->getPassword() || password_verify($password, $usuario->getPassword())) {
             
-            // VERIFICACIÓN REQUERIDA: ¿Pertenece a la tabla empresa o postulantes?
-            $esEmpresaData = $this->persistencia->esEmpresa($ci);
+            // Verifica si pertenece a empresas devolviendo el objeto Empresa
+            $esEmpresaObj = $this->persistencia->esEmpresa($ci);
             
-            if ($esEmpresaData !== false) {
+            if ($esEmpresaObj !== false) {
                 return [
                     "exito" => true, 
                     "tipo" => "empresa", 
                     "usuario" => $usuario,
-                    "id_empresa" => $esEmpresaData['ID_empresa'],
-                    "nombre_empresa" => $esEmpresaData['Nombre_empresa']
+                    "id_empresa" => $esEmpresaObj->getIdEmpresa(),
+                    "nombre_empresa" => $esEmpresaObj->getNombreEmpresa()
                 ];
             } else {
                 return [

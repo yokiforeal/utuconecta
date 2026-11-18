@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'app/Presentacion/usuarioPresentacion.php';
+require_once 'app/Presentacion/UsuarioPresentacion.php';
 
 $presentacion = new UsuarioPresentacion();
 $datosVista = $presentacion->cargarPerfil();

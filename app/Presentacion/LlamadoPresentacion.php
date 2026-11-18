@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../Logica/llamadoLogica.php';
+require_once __DIR__ . '/../Logica/LlamadoLogica.php';
 
 class LlamadoPresentacion {
     private $llamadoLogica;
@@ -8,7 +8,29 @@ class LlamadoPresentacion {
         $this->llamadoLogica = new LlamadoLogica();
     }
 
+    // Método utilizado por el index.php
+    public function obtenerCatalogoLlamados() {
+        $busqueda = $_GET['buscar'] ?? '';
+        
+        if (!empty(trim($busqueda))) {
+            $llamados = $this->llamadoLogica->buscarLlamados($busqueda);
+        } else {
+            $llamados = $this->llamadoLogica->listarLlamados();
+        }
+
+        return [
+            'llamados' => $llamados,
+            'busqueda' => $busqueda
+        ];
+    }
+
+    // Método alias para evitar errores si se invoca gestionarPagina() pq tuvimos q realizar cambios para respetar las capas etcetc
     public function gestionarPagina() {
+        return $this->gestionarPaginaEmpresa();
+    }
+
+    // Método principal utilizado por mis_llamados.php para el CRUD (CRAR LEER ACTUALIZAR ELIMINAR) de la empresa 
+    public function gestionarPaginaEmpresa() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -22,11 +44,8 @@ class LlamadoPresentacion {
         $mensaje_exito = '';
         $mensaje_error = '';
 
-        // Manejo limpio de peticiones POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['accion'])) {
-                
-                // CREAR NUEVO LLAMADO
                 if ($_POST['accion'] === 'crear') {
                     $titulo = $_POST['titulo'] ?? '';
                     $desarrollo = $_POST['desarrollo'] ?? '';
@@ -43,16 +62,12 @@ class LlamadoPresentacion {
                     } else {
                         $mensaje_error = $resultado['mensaje'];
                     }
-                } 
-                // ELIMINAR LLAMADO
-                elseif ($_POST['accion'] === 'eliminar') {
+                } elseif ($_POST['accion'] === 'eliminar') {
                     $idLlamado = intval($_POST['id_llamado']);
                     $this->llamadoLogica->borrarLlamado($idLlamado);
                     header("Location: mis_llamados.php");
                     exit();
-                } 
-                // EDITAR LLAMADO EXISTENTE
-                elseif ($_POST['accion'] === 'editar') {
+                } elseif ($_POST['accion'] === 'editar') {
                     $idLlamado = intval($_POST['id_llamado']);
                     $titulo = $_POST['titulo'];
                     $desarrollo = $_POST['desarrollo'];
@@ -80,11 +95,11 @@ class LlamadoPresentacion {
             }
         }
 
-         $misLlamados = $this->llamadoLogica->listarLlamadosPorEmpresa($ciEmpresa);
+        $misLlamados = $this->llamadoLogica->listarLlamadosPorEmpresa($ciEmpresa);
 
-         return [
+        return [
             'llamadoLogica' => $this->llamadoLogica,
-            'mis_llamados'  => $misLlamados, // <-- Cambiado de 'misLlamados' a 'mis_llamados'
+            'mis_llamados'  => $misLlamados,
             'mensaje_exito' => $mensaje_exito,
             'mensaje_error' => $mensaje_error
         ];

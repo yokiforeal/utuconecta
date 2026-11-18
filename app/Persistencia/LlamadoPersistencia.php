@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../../conexion.php';
+require_once __DIR__ . '/../Entidades/llamado.php';
 
 class LlamadoPersistencia {
     public function obtenerTodos() {
@@ -9,7 +10,16 @@ class LlamadoPersistencia {
         $llamados = [];
         if ($resultado) {
             while ($row = $resultado->fetch_assoc()) {
-                $llamados[] = $row;
+                $llamados[] = new Llamado(
+                    $row['ID_llamado'],
+                    $row['ID_empresa'],
+                    $row['Titulo'],
+                    $row['Desarrollo'],
+                    $row['Fecha'],
+                    $row['Horario'],
+                    $row['Vacantes'],
+                    $row['Imagen']
+                );
             }
         }
         $conn->close();
@@ -28,78 +38,20 @@ class LlamadoPersistencia {
         $resultado = $stmt->get_result();
         $llamados = [];
         while ($row = $resultado->fetch_assoc()) {
-            $llamados[] = $row;
+            $llamados[] = new Llamado(
+                $row['ID_llamado'],
+                $row['ID_empresa'],
+                $row['Titulo'],
+                $row['Desarrollo'],
+                $row['Fecha'],
+                $row['Horario'],
+                $row['Vacantes'],
+                $row['Imagen']
+            );
         }
         $stmt->close();
         $conn->close();
         return $llamados;
-    }
-
-    public function crearLlamado($ciEmpresa, $titulo, $desarrollo, $fecha, $horario, $vacantes, $imagen) {
-        $conn = obtenerConexion();
-        
-        // Buscar el ID_empresa a partir del CI del usuario conectado
-        $sqlEmpresa = "SELECT ID_empresa FROM empresas WHERE CI = ?";
-        $stmt = $conn->prepare($sqlEmpresa);
-        $stmt->bind_param("i", $ciEmpresa);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        if (!$row = $res->fetch_assoc()) {
-            $stmt->close();
-            $conn->close();
-            return false;
-        }
-        $idEmpresa = $row['ID_empresa'];
-        $stmt->close();
-
-        // Insertar el llamado
-        $sql = "INSERT INTO llamados (ID_empresa, Titulo, Desarrollo, Fecha, Horario, Vacantes, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("issssis", $idEmpresa, $titulo, $desarrollo, $fecha, $horario, $vacantes, $imagen);
-        $exito = $stmt->execute();
-        $stmt->close();
-        $conn->close();
-        return $exito;
-    }
-
-    public function actualizarLlamado($idLlamado, $titulo, $desarrollo, $vacantes, $horario, $imagen) {
-    $conn = obtenerConexion(); 
-    
-    $sql = "UPDATE llamados 
-            SET Titulo = ?, Desarrollo = ?, Vacantes = ?, Horario = ?, Imagen = ? 
-            WHERE ID_llamado = ?";
-            
-    $stmt = $conn->prepare($sql);
-    
-    
-    // Titulo, Desarrollo, Vacantes, Horario, Imagen, ID_llamado
-    $stmt->bind_param("ssissi", $titulo, $desarrollo, $vacantes, $horario, $imagen, $idLlamado);
-    
-    $resultado = $stmt->execute();
-    
-    $stmt->close();
-    $conn->close();
-    
-    return $resultado;
-    }
-
-    public function eliminarLlamado($idLlamado) {
-        $conn = obtenerConexion();
-        // Borramos primero las postulaciones por el tema de las referencias y eso
-        $sqlPost = "DELETE FROM postula WHERE ID_llamado = ?";
-        $stmtPost = $conn->prepare($sqlPost);
-        $stmtPost->bind_param("i", $idLlamado);
-        $stmtPost->execute();
-        $stmtPost->close();
-
-        // Despues eliminamos el llamado
-        $sql = "DELETE FROM llamados WHERE ID_llamado = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $idLlamado);
-        $exito = $stmt->execute();
-        $stmt->close();
-        $conn->close();
-        return $exito;
     }
 
     public function buscarLlamados($termino) {
@@ -117,12 +69,73 @@ class LlamadoPersistencia {
         
         $llamados = [];
         while ($row = $resultado->fetch_assoc()) {
-            $llamados[] = $row;
+            $llamados[] = new Llamado(
+                $row['ID_llamado'],
+                $row['ID_empresa'],
+                $row['Titulo'],
+                $row['Desarrollo'],
+                $row['Fecha'],
+                $row['Horario'],
+                $row['Vacantes'],
+                $row['Imagen']
+            );
         }
         
         $stmt->close();
         $conn->close();
         return $llamados;
+    }
+
+    public function crearLlamado($ciEmpresa, $titulo, $desarrollo, $fecha, $horario, $vacantes, $imagen) {
+        $conn = obtenerConexion();
+        $sqlEmpresa = "SELECT ID_empresa FROM empresas WHERE CI = ?";
+        $stmt = $conn->prepare($sqlEmpresa);
+        $stmt->bind_param("i", $ciEmpresa);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        if (!$row = $res->fetch_assoc()) {
+            $stmt->close();
+            $conn->close();
+            return false;
+        }
+        $idEmpresa = $row['ID_empresa'];
+        $stmt->close();
+
+        $sql = "INSERT INTO llamados (ID_empresa, Titulo, Desarrollo, Fecha, Horario, Vacantes, Imagen) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("issssis", $idEmpresa, $titulo, $desarrollo, $fecha, $horario, $vacantes, $imagen);
+        $exito = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $exito;
+    }
+
+    public function actualizarLlamado($idLlamado, $titulo, $desarrollo, $vacantes, $horario, $imagen) {
+        $conn = obtenerConexion(); 
+        $sql = "UPDATE llamados SET Titulo = ?, Desarrollo = ?, Vacantes = ?, Horario = ?, Imagen = ? WHERE ID_llamado = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssissi", $titulo, $desarrollo, $vacantes, $horario, $imagen, $idLlamado);
+        $resultado = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $resultado;
+    }
+
+    public function eliminarLlamado($idLlamado) {
+        $conn = obtenerConexion();
+        $sqlPost = "DELETE FROM postula WHERE ID_llamado = ?";
+        $stmtPost = $conn->prepare($sqlPost);
+        $stmtPost->bind_param("i", $idLlamado);
+        $stmtPost->execute();
+        $stmtPost->close();
+
+        $sql = "DELETE FROM llamados WHERE ID_llamado = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idLlamado);
+        $exito = $stmt->execute();
+        $stmt->close();
+        $conn->close();
+        return $exito;
     }
 }
 ?>
